@@ -13,6 +13,7 @@ const config = {
 const conn = mysql.createConnection(
     config
 );
+
 const query = util.promisify(conn.query).bind(conn);
 
 module.exports = query;

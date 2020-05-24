@@ -24,8 +24,21 @@ const route_admin_admin = require('./routes/route_admin_admin');
 const route_student_student = require('./routes/route_student_student');
 const route_manage_room = require('./routes/route_manage_room');
 
+
 dotenv.config();
 
+const con = mysql.createConnection({
+  host: '192.168.1.4',
+  user: 'root',
+  port: '3306'
+})
+con.connect(function (err) {
+  if (err) {
+    console.log(err);
+    return err
+  }
+  console.log("Connected!");
+});
 
 app.use(express.json());
 app.use(bodyParser.urlencoded({

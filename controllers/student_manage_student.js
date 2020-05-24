@@ -8,6 +8,7 @@ const {
 } = require('../helper/convert_object')
 const session = require('express-session')
 const jwt = require('jsonwebtoken')
+const nodemailer = require('nodemailer')
 
 exports.studentLogOut = async function (req, res) {
     try {
@@ -16,8 +17,6 @@ exports.studentLogOut = async function (req, res) {
         return success(res, 'RETURN_HOMEPAGE_STUDENT')
     } catch (error) {
         return errors(res, error)
-
-
     }
 }
 
@@ -57,11 +56,65 @@ exports.studentUpdateInfo = async (req, res) => {
             "',phone='" + req.body.phone +
             "',course='" + req.body.course +
             "',cmnd_card_number='" + req.body.cmnd_card_number +
-            "',student_status='" + req.body.student_status +
             "',date_valid_room='" + req.body.date_valid_room +
             "' WHERE id_student=" + studentData[0].id_student + ";"
         const result = await query(queryString)
         const data = await convert(result)
+        return success(res, data)
+    } catch (error) {
+        return errors(res, error)
+    }
+}
+
+exports.studentSignup = async (req, res) => {
+    try {
+        let queryString = "INSERT INTO student (username,password,full_name,email,birthday,phone,course,cmnd_card_number,student_status,date_valid_room) VALUES('" +
+            req.body.username +
+            "','" +
+            req.body.password +
+            "','" +
+            req.body.full_name +
+            "','" +
+            req.body.email +
+            "','" +
+            req.body.birthday +
+            "','" +
+            req.body.phone +
+            "','" +
+            req.body.course +
+            "','" +
+            req.body.cmnd_card_number +
+            "','Not Verify','" +
+            req.body.date_valid_room +
+            "');"
+
+
+        const result = await query(queryString)
+        const data = await convert(result)
+        // if (req.body.email.split('@')[req.body.email.split('@').length - 1] == 'gmail.com') {
+        //     var transporter = nodemailer.createTransport({
+        //         service: 'Gmail',
+        //         auth: {
+        //             user: 'hoangnguyenminh.hust@gmail.com',
+        //             pass: '1chapnhandi'
+        //         }
+        //     })
+
+        //     host = req.get('host')
+        //     link = 'http://' + req.get('host') + '/verify/' + data.insertId
+        //     mailOptions = {
+        //         from: 'hoangnguyenminh.hust@gmail.com',
+        //         to: req.body.email,
+        //         subject: 'Please confirm your Email account of dormitory HUST',
+        //         html: 'Hello,<br> Please Click on the link to verify your email.<br><a href=' + link + '>Click here to verify</a>'
+        //     }
+        //     transporter.sendMail(mailOptions, (err, info) => {
+        //         if (err) res.send(err)
+        //         else {
+        //             console.log('Email verify' + info.response)
+        //         }
+        //     })
+        // }
         return success(res, data)
     } catch (error) {
         return errors(res, error)
