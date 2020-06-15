@@ -28,9 +28,10 @@ const route_manage_room = require('./routes/route_manage_room');
 dotenv.config();
 
 const con = mysql.createConnection({
-  host: '192.168.1.4',
-  user: 'root',
-  port: '3306'
+  host: process.env.MYSQL_HOST,
+  user: process.env.MYSQL_USER,
+  port: process.env.MYSQL_PORT,
+  password: process.env.MYSQL_PASS
 })
 con.connect(function (err) {
   if (err) {

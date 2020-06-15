@@ -76,7 +76,7 @@ exports.adminArrangeStudentToRoom = async (req, res) => {
 
 
 
-exports.adminDeleteStudentToRoom = async (req, res) => {
+exports.s = async (req, res) => {
     try {
         let queryString = "UPDATE student SET id_room=NULL WHERE id_student=" + req.params.id_student + ";"
         const result = await query(queryString)
