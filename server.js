@@ -53,7 +53,7 @@ app.use(session({
 }));
 app.use('/student_student', route_student_student);
 
-// app.use('/admin_room', route_manage_room);
+app.use('/admin_room', route_manage_room);
 
 // app.use('/admin_student', route_manage_student);
 

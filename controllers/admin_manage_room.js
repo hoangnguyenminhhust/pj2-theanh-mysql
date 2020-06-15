@@ -9,10 +9,10 @@ const {
 
 exports.adminUpdateRoom = async function (req, res) {
     try {
-        var queryString = "UPDATE room SET full_name='" + req.body.room_name +
+        var queryString = "UPDATE room SET name_room='" + req.body.name_room +
             "',building='" + req.body.building +
             "',room_size='" + req.body.room_size +
-            "',room_price='" + req.body.email +
+            "',room_price='" + req.body.room_price +
             "',room_status='" + req.body.room_status +
             "',room_gender='" + req.body.room_gender +
             "',max_student='" + req.body.max_student +
@@ -28,7 +28,7 @@ exports.adminUpdateRoom = async function (req, res) {
 
 exports.adminDeleteRoom = async (req, res) => {
     try {
-        let queryString = "DELETE FROM student WHERE id_room=" + req.params.id_room + ";"
+        let queryString = "DELETE FROM room WHERE id_room=" + req.params.id_room + ";"
         const result = await query(queryString)
         const data = await convert(result)
         return success(res, data)
@@ -40,7 +40,7 @@ exports.adminDeleteRoom = async (req, res) => {
 
 exports.adminViewInfoRoom = async (req, res) => {
     try {
-        let queryString = "SELECT * FROM student WHERE id_room=" + req.params.id_room + ";"
+        let queryString = "SELECT * FROM room WHERE id_room=" + req.params.id_room + ";"
         const result = await query(queryString)
         const data = await convert(result)
         return success(res, data)
@@ -62,7 +62,7 @@ exports.adminListAllRoom = async (req, res) => {
 
 exports.adminCreateRoom = async function (req, res) {
     try {
-        var queryString = "INSERT INTO room (building,name_room,room_size,room_price,room_gender,max_student) VALUES ('" + req.body.building + "','" + req.body.room_name + "'," + req.body.room_size + "," + req.body.room_price + ",'" + req.body.room_gender + "'," + req.body.max_student + ",0);"
+        var queryString = "INSERT INTO room (building,name_room,room_size,room_price,room_gender,max_student,current_student,room_status) VALUES ('" + req.body.building + "','" + req.body.name_room + "'," + req.body.room_size + "," + req.body.room_price + ",'" + req.body.room_gender + "'," + req.body.max_student + ",0,"+req.body.room_status+");"
         const result = await query(queryString)
         const data = await convert(result)
         return success(res, data)
