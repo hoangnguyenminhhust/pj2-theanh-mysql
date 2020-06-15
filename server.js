@@ -12,6 +12,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const nodemailer = require('nodemailer');
 const mysql = require('mysql');
+const cors = require('cors');
 
 const studentModel = require('./models/student');
 const roomModel = require('./models/room');
@@ -42,6 +43,7 @@ con.connect(function (err) {
 });
 
 app.use(express.json());
+app.use(cors())
 app.use(bodyParser.urlencoded({
   extended: false,
 }));
