@@ -68,7 +68,9 @@ exports.studentUpdateInfo = async (req, res) => {
 
 exports.studentSignup = async (req, res) => {
     try {
-        let queryString = "INSERT INTO student (username,password,full_name,email,birthday,phone,course,cmnd_card_number,student_status,date_valid_room) VALUES('" +
+        console.log(req.body)
+
+        let queryString = "INSERT INTO student (username,password,full_name,email,birthday,phone,course,cmnd_number,status) VALUES('" +
             req.body.username +
             "','" +
             req.body.password +
@@ -83,12 +85,8 @@ exports.studentSignup = async (req, res) => {
             "','" +
             req.body.course +
             "','" +
-            req.body.cmnd_card_number +
-            "','Not Verify','" +
-            req.body.date_valid_room +
-            "');"
-
-
+            req.body.cmnd_number +
+            "',0);"
         const result = await query(queryString)
         const data = await convert(result)
         // if (req.body.email.split('@')[req.body.email.split('@').length - 1] == 'gmail.com') {

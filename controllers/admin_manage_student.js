@@ -65,7 +65,33 @@ exports.adminListAllStudent = async (req, res) => {
 
 exports.adminArrangeStudentToRoom = async (req, res) => {
     try {
-        let queryString = "UPDATE student SET id_room=" + req.params.id_room + " WHERE id_student=" + req.params.id_student + ";"
+        fullDate = new Date()
+        const date = fullDate.getDate()
+        const year = fullDate.getFullYear()
+        const month = fullDate.getMonth()
+        const l = `${year}-${month}-${date}`
+        let queryString = "INSERT INTO status_student (student,room,date_valid_room) VALUES (" +
+            req.params.studentId + "," +
+            req.params.roomId + ",'" +
+            l + "');"
+            console.log(l)
+        const queryString2 = "UPDATE student SET status=1 WHERE id_student="+req.params.studentId+";"
+
+        const queryString3 = "UPDATE room SET current_student=current_student+1  WHERE id_room="+req.params.roomId+";"
+
+        await query(queryString2)
+        await query(queryString3)
+        await query(queryString)
+        return success(res, "ok")
+    } catch (error) {
+        console.log(error)
+
+        return errors(res, error)
+    }
+}
+exports.adminCheckStudentFree = async function (req, res) {
+    try {
+        var queryString = "SELECT * FROM student WHERE (status=0)"
         const result = await query(queryString)
         const data = await convert(result)
         return success(res, data)
@@ -73,7 +99,6 @@ exports.adminArrangeStudentToRoom = async (req, res) => {
         return errors(res, error)
     }
 }
-
 
 
 exports.s = async (req, res) => {
