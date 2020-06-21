@@ -51,7 +51,18 @@ exports.adminViewInfoRoom = async (req, res) => {
 
 exports.adminListAllRoom = async (req, res) => {
     try {
-        let queryString = "SELECT * FROM room;"
+        let queryString = "SELECT * FROM room WHERE room_status = 1"
+        const result = await query(queryString)
+        const data = await convert(result)
+        return success(res, data)
+    } catch (error) {
+        return errors(res, error)
+    }
+}
+
+exports.adminListAllRoomFail = async (req, res) => {
+    try {
+        let queryString = "SELECT * FROM room WHERE room_status = 0"
         const result = await query(queryString)
         const data = await convert(result)
         return success(res, data)
@@ -98,14 +109,37 @@ exports.adminCheckByBuilding = async function (req, res) {
     }
 }
 
-// exports.adminCheckStatusStudentInRoom = async function (req, res) {
-//     try {
-//         var queryString = "SELECT * FROM room WHERE (max_student - current_student) > 0 ORDER BY (max_student - current_student)"
-//         const result = await query(queryString)
-//         const data = await convert(result)
-//         return success(res, data)
-//     } catch (error) {
-//         return errors(res, error)
-//     }
-// }
+exports.adminCheckListStudentInRoom = async function (req, res) {
+    try {
+        var queryString = "SELECT id_student , full_name , phone ,course ,status , username , birthday ,cmnd_number FROM `pj-thea`.student s JOIN `pj-thea`.status_student ss ON s.id_student = ss.student JOIN `pj-thea`.room r ON r.id_room = ss.room WHERE r.id_room = "+req.params.id_room+" AND s.status = 1"
+        const result = await query(queryString)
+        const data = await convert(result)
+        return success(res, data)
+    } catch (error) {
+        return errors(res, error)
+    }
+}
 
+
+exports.adminCheckByBuildingRoom = async function (req, res) {
+    try {
+        var queryString = "SELECT * FROM room WHERE (building='"+req.params.building+"' AND name_room='"+req.params.room+"') > 0 ORDER BY (max_student - current_student)"
+        const result = await query(queryString)
+        const data = await convert(result)
+        return success(res, data)
+    } catch (error) {
+        return errors(res, error)
+    }
+}
+
+
+exports.adminSearchRoom = async (req, res) =>{
+    try {
+        let queryString = " SELECT * FROM `pj-thea`.room WHERE building LIKE '%"+req.params.text+"%' OR name_room LIKE  '%"+req.params.text+"%'"
+        const result = await query(queryString)
+        const data = await convert(result)
+        return success(res, data)
+    } catch (error) {
+        return errors(res, error)
+    }
+}
