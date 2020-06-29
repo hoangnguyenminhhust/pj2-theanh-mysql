@@ -39,6 +39,25 @@ exports.adminDeleteStudent = async (req, res) => {
     }
 }
 
+exports.adminSearchStudentByName = async (req, res) => {
+    try {
+        let queryString = "SELECT * FROM `pj-thea`.student s WHERE full_name LIKE '%"+req.params.text+"%'"
+        const result = await query(queryString)
+        const data = await convert(result)
+        data.forEach((e)=> {
+            const fullDate = new Date(e.birthday)
+            
+            const date = fullDate.getUTCDate()
+            const year = fullDate.getUTCFullYear()
+            const month = fullDate.getMonth() +1 
+            const l = `${year}-${month}-${date}`
+            e.birthday = l
+        })
+        return success(res, data)
+    } catch (error) {
+        return errors(res, error)
+    }
+}
 
 exports.adminViewInfoStudent = async (req, res) => {
     try {
@@ -56,6 +75,15 @@ exports.adminListAllStudent = async (req, res) => {
         let queryString = "SELECT * FROM student;"
         const result = await query(queryString)
         const data = await convert(result)
+        data.forEach((e)=> {
+            const fullDate = new Date(e.birthday)
+            
+            const date = fullDate.getUTCDate()
+            const year = fullDate.getUTCFullYear()
+            const month = fullDate.getMonth() +1 
+            const l = `${year}-${month}-${date}`
+            e.birthday = l
+        })
         return success(res, data)
     } catch (error) {
         return errors(res, error)
@@ -74,7 +102,6 @@ exports.adminArrangeStudentToRoom = async (req, res) => {
             req.params.studentId + "," +
             req.params.roomId + ",'" +
             l + "');"
-            console.log(l)
         const queryString2 = "UPDATE student SET status=1 WHERE id_student="+req.params.studentId+";"
 
         const queryString3 = "UPDATE room SET current_student=current_student+1  WHERE id_room="+req.params.roomId+";"
@@ -84,7 +111,6 @@ exports.adminArrangeStudentToRoom = async (req, res) => {
         await query(queryString)
         return success(res, "ok")
     } catch (error) {
-        console.log(error)
 
         return errors(res, error)
     }
@@ -94,6 +120,15 @@ exports.adminCheckStudentFree = async function (req, res) {
         var queryString = "SELECT * FROM student WHERE (status=0)"
         const result = await query(queryString)
         const data = await convert(result)
+        data.forEach((e)=> {
+            const fullDate = new Date(e.birthday)
+            
+            const date = fullDate.getUTCDate()
+            const year = fullDate.getUTCFullYear()
+            const month = fullDate.getMonth() +1 
+            const l = `${year}-${month}-${date}`
+            e.birthday = l
+        })
         return success(res, data)
     } catch (error) {
         return errors(res, error)

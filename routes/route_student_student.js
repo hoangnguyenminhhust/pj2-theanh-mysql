@@ -12,4 +12,6 @@ route.get('/', auth, student_student.studentViewInfo)
 
 route.put('/', auth, student_student.studentUpdateInfo)
 
+
+
 module.exports = route;
