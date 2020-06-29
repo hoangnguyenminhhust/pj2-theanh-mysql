@@ -12,4 +12,6 @@ route.post('/find-student/:text', manage_student.adminSearchStudentByName)
 route.delete('/:id_student', manage_student.adminDeleteStudent)
 route.get('/:id_student' , manage_student.adminViewInfoStudent)
 
+route.put(':/id_student' , manage_student.adminUpdateStudent)
+
 module.exports = route;
