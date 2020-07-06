@@ -8,7 +8,6 @@ const authentication = async (req, res, next) => {
     try {
         const token = req.headers['x-access-token'].replace('Bearer ', '') || req.header('Authorization').replace('Bearer ', '')
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
-        console.log(decoded);
         let queryString = "SELECT * FROM student WHERE id_student LIKE '" + decoded + "';"
 
         const result = await query(queryString)

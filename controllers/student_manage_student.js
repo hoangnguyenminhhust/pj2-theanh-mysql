@@ -102,6 +102,7 @@ exports.studentViewListRoomate = async (req, res) => {
             let queryString2 = "SELECT full_name, birthday, email, phone,course,cmnd_number, sex FROM student JOIN status_student ON status_student.student = student.id_student JOIN room ON room.id_room = status_student.room WHERE room.id_room =" + last.id_room + ";"
             const result2 = await query(queryString2)
             const data2 = await convert(result2)
+            if(data2.length === 0 ) return success(res, "NOT_FOUND")
             return success(res, data2)
         }
     } catch (error) {

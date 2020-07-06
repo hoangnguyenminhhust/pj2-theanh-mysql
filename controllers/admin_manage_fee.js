@@ -8,7 +8,7 @@ const {
 } = require('../helper/convert_object')
 exports.adminListFee = async (req, res) => {
     try {
-        let queryString = "SELECT id_fee,full_name, date,price_fee, payment_status, date_payment FROM student JOIN fee ON fee.student = student.id_student"
+        let queryString = "SELECT id_student,id_fee,full_name, date,price_fee, payment_status, date_payment FROM student JOIN fee ON fee.student = student.id_student"
         const result = await query(queryString)
         const data = await convert(result)
         return success(res, data)
@@ -103,7 +103,7 @@ exports.adminFindFeeNotYetPayment = async (req, res) => {
 exports.adminViewHistoryPayment = async (req, res) => {
 
     try {
-        let queryString = "SELECT full_name ,date , date_valid_room, date_out_room, date_payment, price_fee FROM student JOIN fee ON fee.student = student.id_student JOIN status_student ON student.id_student = status_student.student WHERE id_student = "+req.params.id_student+""
+        let queryString = "SELECT full_name ,date ,id_fee,date_valid_room, payment_status,date_out_room, date_payment, price_fee FROM student JOIN fee ON fee.student = student.id_student JOIN status_student ON student.id_student = status_student.student WHERE id_student = "+req.params.id_student+""
         const result = await query(queryString)
         const data = await convert(result)
         return success(res, data)
@@ -111,7 +111,7 @@ exports.adminViewHistoryPayment = async (req, res) => {
         return errors(res, error)
     }
 }
-
+exports.adminViewListRoom = "SELECT"
 
 exports.adminDeleteFee = async (req, res) => {
     try {

@@ -119,7 +119,7 @@ exports.adminCheckByBuilding = async function (req, res) {
 
 exports.adminCheckListStudentInRoom = async function (req, res) {
     try {
-        var queryString = "SELECT id_student , full_name , phone ,course ,status , username , birthday ,cmnd_number FROM `pj-thea`.student s JOIN `pj-thea`.status_student ss ON s.id_student = ss.student JOIN `pj-thea`.room r ON r.id_room = ss.room WHERE r.id_room = "+req.params.id_room+" AND s.status = 1"
+        var queryString = "SELECT id_student , full_name , phone ,course ,status , username , birthday ,cmnd_number FROM `pj-thea`.student s JOIN `pj-thea`.status_student ss ON s.id_student = ss.student JOIN `pj-thea`.room r ON r.id_room = ss.room WHERE r.id_room = "+req.params.id_room+" AND s.status = 1 AND ss.date_out_room IS NULL"
         const result = await query(queryString)
         const data = await convert(result)
         return success(res, data)

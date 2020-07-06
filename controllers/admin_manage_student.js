@@ -168,9 +168,26 @@ exports.adminKickStudent= async (req, res) => {
 
 
     try {
+        const fullDate = new Date()
+            
+        const date = fullDate.getUTCDate()
+        const year = fullDate.getUTCFullYear()
+        const month = fullDate.getMonth() +1 
+        const l = `${year}-${month}-${date}`
+        let queryString3 = "UPDATE student SET status = 0 WHERE id_student =" + req.params.id_student + ";"
+        let queryString2 = "UPDATE status_student SET date_out_room ='"+l+"' WHERE student="+req.params.id_student+"  AND date_out_room IS NULL"
+        let queryString = "SELECT id_room FROM `pj-thea`.room r JOIN `pj-thea`.status_student ss ON ss.room = r.id_room JOIN `pj-thea`.student s ON ss.student = s.id_student WHERE id_student = "+req.params.id_student+" AND date_out_room IS NULL"
+        console.log(queryString)
+        const result = await query(queryString)
+        const data = await convert(result)
+        let queryString4 = "UPDATE `pj-thea`.room SET current_student = current_student - 1 WHERE id_room = "+data[0].id_room+""
         
+        await query(queryString4)
+        await query(queryString3)
+        await query(queryString2)
+        return success(res, "ok")
     } catch (error) {
-        
+        return errors(res, error)
     }
 }
 
