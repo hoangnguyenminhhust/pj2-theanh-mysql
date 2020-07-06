@@ -6,7 +6,17 @@ const query = require('../config/mysql_query_async')
 const {
     convert
 } = require('../helper/convert_object')
-
+exports.adminListFee = async (req, res) => {
+    try {
+        let queryString = "SELECT id_fee,full_name, date,price_fee, payment_status, date_payment FROM student JOIN fee ON fee.student = student.id_student"
+        const result = await query(queryString)
+        const data = await convert(result)
+        return success(res, data)
+    } catch (error) {
+        
+        return errors(res, error)
+    }
+}
 exports.adminCreateFee = async function (req, res) {
     try {
         let totalDay = 0;
@@ -97,6 +107,48 @@ exports.adminViewHistoryPayment = async (req, res) => {
         const result = await query(queryString)
         const data = await convert(result)
         return success(res, data)
+    } catch (error) {
+        return errors(res, error)
+    }
+}
+
+
+exports.adminDeleteFee = async (req, res) => {
+    try {
+        let queryString  = "DELETE FROM fee WHERE id_fee = " +req.params.id_fee+";"
+        await query(queryString)
+        return success(res, "ok")
+    } catch (error) {
+        return errors(res, error)
+    }
+}
+
+exports.adminUpdateFee = async (req, res) => {
+
+    try {
+        var queryString = "UPDATE fee SET date='" + req.body.date +
+        "',price_fee=" + req.body.price_fee +
+        " WHERE id_fee=" + req.params.id_fee + ";"
+        const result = await query(queryString)
+        const data = await convert(result)
+        return success(res, data)
+    } catch (error) {
+        return errors(res, error)
+    }
+}
+
+
+exports.adminConfirmFee = async (req, res) => {
+    try {
+        const fullDate = new Date()
+            
+        const date = fullDate.getUTCDate() + 1
+        const year = fullDate.getUTCFullYear()
+        const month = fullDate.getMonth()
+        const l = `${year}-${month}-${date}`
+        let queryString = "UPDATE fee SET payment_status = 1, date_payment='"+l+"' WHERE id_fee = " + req.params.id_fee + ";"
+        await query(queryString)
+        return success(res, "ok")
     } catch (error) {
         return errors(res, error)
     }

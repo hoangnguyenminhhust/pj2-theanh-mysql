@@ -27,7 +27,7 @@ exports.studentLogIn = async (req, res) => {
                 algorithm: 'HS256',
             })
             req.headers['x-access-token'] = token
-            return success(res, token)
+            return success(res, {...data, token: token})
         }
         return success(res, 'CANNOT_FIND_USER')
     } catch (error) {

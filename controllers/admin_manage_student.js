@@ -133,15 +133,45 @@ exports.adminCheckStudentFree = async function (req, res) {
         return errors(res, error)
     }
 }
-
-
-exports.s = async (req, res) => {
+exports.adminDeleteStudent = async (req, res) => {
     try {
-        let queryString = "UPDATE student SET id_room=NULL WHERE id_student=" + req.params.id_student + ";"
+ 
+        let queryString = "SELECT id_status FROM status_student JOIN student ON student.id_student = status_student.student WHERE id_student ="+req.params.id_student+""
         const result = await query(queryString)
         const data = await convert(result)
-        return success(res, data)
+
+        data.forEach(async e => {
+            let queryString2 = "DELETE FROM status_student WHERE id_status=" + e.id_status + ";"
+            await query(queryString2)
+        })
+
+         
+        let queryString3 = "SELECT id_fee FROM fee JOIN student ON student.id_student = fee.student WHERE id_student ="+req.params.id_student+""
+        const result3 = await query(queryString3)
+        const data3 = await convert(result3)
+
+        data3.forEach(async e => {
+            let queryString4 = "DELETE FROM fee WHERE id_fee=" + e.id_fee + ";"
+            await query(queryString4)
+        })
+
+        let queryString5 = "DELETE FROM student WHERE id_student = " + req.params.id_student + ";"
+        await query(queryString5)
+        return success(res, "ok")
     } catch (error) {
         return errors(res, error)
     }
 }
+
+
+exports.adminKickStudent= async (req, res) => {
+
+
+    try {
+        
+    } catch (error) {
+        
+    }
+}
+
+

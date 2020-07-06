@@ -28,10 +28,18 @@ exports.adminUpdateRoom = async function (req, res) {
 
 exports.adminDeleteRoom = async (req, res) => {
     try {
-        let queryString = "DELETE FROM room WHERE id_room=" + req.params.id_room + ";"
+
+        let queryString = "SELECT id_status FROM status_student JOIN room ON room.id_room = status_student.room WHERE id_room ="+req.params.id_room+""
         const result = await query(queryString)
         const data = await convert(result)
-        return success(res, data)
+
+        data.forEach(async e => {
+            let queryString2 = "DELETE FROM status_student WHERE id_status=" + e.id_status + ";"
+            await query(queryString2)
+        })
+        let queryString3 = "DELETE FROM room WHERE id_room = " + req.params.id_room + ";"
+        await query(queryString3)
+        return success(res, "ok")
     } catch (error) {
         return errors(res, error)
     }
