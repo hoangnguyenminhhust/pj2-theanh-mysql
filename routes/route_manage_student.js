@@ -10,7 +10,7 @@ route.get('/free' ,auth, manage_student.adminCheckStudentFree)
 route.post('/find-student/:text',auth, manage_student.adminSearchStudentByName)
 
 route.delete('/:id_student',auth, manage_student.adminDeleteStudent)
-route.get('/:id_student' ,auth, manage_student.adminViewInfoStudent)
+route.get('/:id_student' , manage_student.adminViewInfoStudent)
 
 route.put('/:id_student' ,auth, manage_student.adminUpdateStudent)
 

@@ -20,7 +20,7 @@ const route_manage_student = require('./routes/route_manage_student');
 const route_admin_admin = require('./routes/route_admin_admin');
 const route_student_student = require('./routes/route_student_student');
 const route_manage_room = require('./routes/route_manage_room');
-
+const route_admin_fee = require('./routes/route_admin_fee')
 
 dotenv.config();
 
@@ -56,6 +56,9 @@ app.use('/admin_room', route_manage_room);
 app.use('/admin_student', route_manage_student);
 
 app.use('/admin_admin', route_admin_admin);
+
+app.use('/admin_fee', route_admin_fee);
+
 
 app.listen(process.env.PORT, (err) => {
   if (err) console.log(err);
