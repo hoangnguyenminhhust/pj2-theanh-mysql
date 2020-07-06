@@ -101,3 +101,45 @@ exports.adminViewHistoryPayment = async (req, res) => {
         return errors(res, error)
     }
 }
+
+
+exports.adminDeleteFee = async (req, res) => {
+    try {
+        let queryString  = "DELETE FROM fee WHERE id_fee = " +req.params.id_fee+";"
+        await query(queryString)
+        return success(res, "ok")
+    } catch (error) {
+        return errors(res, error)
+    }
+}
+
+exports.adminUpdateFee = async (req, res) => {
+
+    try {
+        var queryString = "UPDATE fee SET date='" + req.body.date +
+        "',price_fee=" + req.body.price_fee +
+        " WHERE id_fee=" + req.params.id_fee + ";"
+        const result = await query(queryString)
+        const data = await convert(result)
+        return success(res, data)
+    } catch (error) {
+        return errors(res, error)
+    }
+}
+
+
+exports.adminConfirmFee = async (req, res) => {
+    try {
+        const fullDate = new Date()
+            
+        const date = fullDate.getUTCDate() + 1
+        const year = fullDate.getUTCFullYear()
+        const month = fullDate.getMonth()
+        const l = `${year}-${month}-${date}`
+        let queryString = "UPDATE fee SET payment_status = 1, date_payment='"+l+"' WHERE id_fee = " + req.params.id_fee + ";"
+        await query(queryString)
+        return success(res, "ok")
+    } catch (error) {
+        return errors(res, error)
+    }
+}
