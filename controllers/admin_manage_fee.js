@@ -6,7 +6,17 @@ const query = require('../config/mysql_query_async')
 const {
     convert
 } = require('../helper/convert_object')
-
+exports.adminListFee = async (req, res) => {
+    try {
+        let queryString = "SELECT id_fee,full_name, date,price_fee, payment_status, date_payment FROM student JOIN fee ON fee.student = student.id_student"
+        const result = await query(queryString)
+        const data = await convert(result)
+        return success(res, data)
+    } catch (error) {
+        
+        return errors(res, error)
+    }
+}
 exports.adminCreateFee = async function (req, res) {
     try {
         let totalDay = 0;
