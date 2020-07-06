@@ -14,10 +14,6 @@ const nodemailer = require('nodemailer');
 const mysql = require('mysql');
 const cors = require('cors');
 
-const studentModel = require('./models/student');
-const roomModel = require('./models/room');
-const adminModel = require('./models/admin');
-const receiptModel = require('./models/receipt');
 
 
 const route_manage_student = require('./routes/route_manage_student');

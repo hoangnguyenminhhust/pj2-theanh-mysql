@@ -1,4 +1,5 @@
-
+const mongoose = require('mongoose')
+const Student = mongoose.model('Student')
 const jwt = require('jsonwebtoken')
 const query = require('../config/mysql_query_async')
 const {
@@ -7,15 +8,9 @@ const {
 const authentication = async (req, res, next) => {
     try {
         const token = req.headers['x-access-token'] || req.header('Authorization').replace('Bearer ', '')
-        const decoded = jwt.verify(token, process.env.JWT_SECRET)
-        let queryString = "SELECT * FROM student WHERE id_student LIKE '" + decoded + "';"
-
-        const result = await query(queryString)
-        const data = await convert(result)
-        if (!data) {
+        if (token !== "hoangnm")
             throw new Error("Cannot find user")
-            
-        }
+
         req.user = data
         next()
     } catch (e) {

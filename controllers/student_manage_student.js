@@ -6,14 +6,11 @@ const query = require('../config/mysql_query_async')
 const {
     convert
 } = require('../helper/convert_object')
-const session = require('express-session')
+
 const jwt = require('jsonwebtoken')
-const nodemailer = require('nodemailer')
 
 exports.studentLogOut = async function (req, res) {
     try {
-        await req.session.destroy()
-        // res.redirect(`http://${req.get('host')}/homepage_admin`)
         return success(res, 'RETURN_HOMEPAGE_STUDENT')
     } catch (error) {
         return errors(res, error)
@@ -30,7 +27,6 @@ exports.studentLogIn = async (req, res) => {
                 algorithm: 'HS256',
             })
             req.headers['x-access-token'] = token
-            req.session.save()
             return success(res, token)
         }
         return success(res, 'CANNOT_FIND_USER')
@@ -40,7 +36,7 @@ exports.studentLogIn = async (req, res) => {
 }
 exports.studentViewInfo = async (req, res) => {
     try {
-        let studentData = req.student
+        let studentData = req.user
         success(res, studentData)
     } catch (error) {
         errors(res, error)
@@ -49,7 +45,7 @@ exports.studentViewInfo = async (req, res) => {
 
 exports.studentUpdateInfo = async (req, res) => {
     try {
-        let studentData = req.student
+        let studentData = req.user
         var queryString = "UPDATE student SET full_name='" + req.body.full_name +
             "',email='" + req.body.email +
             "',birthday='" + req.body.birthday +
@@ -68,7 +64,6 @@ exports.studentUpdateInfo = async (req, res) => {
 
 exports.studentSignup = async (req, res) => {
     try {
-        console.log(req.body)
 
         let queryString = "INSERT INTO student (username,password,full_name,email,birthday,phone,course,cmnd_number,status) VALUES('" +
             req.body.username +
@@ -89,31 +84,26 @@ exports.studentSignup = async (req, res) => {
             "',0);"
         const result = await query(queryString)
         const data = await convert(result)
-        // if (req.body.email.split('@')[req.body.email.split('@').length - 1] == 'gmail.com') {
-        //     var transporter = nodemailer.createTransport({
-        //         service: 'Gmail',
-        //         auth: {
-        //             user: 'hoangnguyenminh.hust@gmail.com',
-        //             pass: '1chapnhandi'
-        //         }
-        //     })
 
-        //     host = req.get('host')
-        //     link = 'http://' + req.get('host') + '/verify/' + data.insertId
-        //     mailOptions = {
-        //         from: 'hoangnguyenminh.hust@gmail.com',
-        //         to: req.body.email,
-        //         subject: 'Please confirm your Email account of dormitory HUST',
-        //         html: 'Hello,<br> Please Click on the link to verify your email.<br><a href=' + link + '>Click here to verify</a>'
-        //     }
-        //     transporter.sendMail(mailOptions, (err, info) => {
-        //         if (err) res.send(err)
-        //         else {
-        //             console.log('Email verify' + info.response)
-        //         }
-        //     })
-        // }
         return success(res, data)
+    } catch (error) {
+        return errors(res, error)
+    }
+}
+
+exports.studentViewListRoomate = async (req, res) => {
+    try {
+        const user = req.user
+        if (user[0].status === 1) {
+            let queryString = "SELECT id_room , date_valid_room, date_out_room FROM room JOIN status_student ON status_student.room = room.id_room JOIN student ON status_student.student = student.id_student WHERE student.id_student = " + user[0].id_student + ";"
+            const result = await query(queryString)
+            const data = await convert(result)
+            const last = data.pop()
+            let queryString2 = "SELECT full_name, birthday, email, phone,course,cmnd_number, sex FROM student JOIN status_student ON status_student.student = student.id_student JOIN room ON room.id_room = status_student.room WHERE room.id_room =" + last.id_room + ";"
+            const result2 = await query(queryString2)
+            const data2 = await convert(result2)
+            return success(res, data2)
+        }
     } catch (error) {
         return errors(res, error)
     }
